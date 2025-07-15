@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Form with Location</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: auto;
+      padding: 20px;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #result {
+      margin-top: 20px;
+      padding: 10px;
+      background: #e9f7ef;
+      border: 1px solid #b2dfdb;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Enter Your Name</h2>
+    <form id="userForm">
+      <input type="text" id="username" placeholder="Enter your name" required />
+      <button type="submit">Submit</button>
+    </form>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("userForm");
+    const resultDiv = document.getElementById("result");
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const name = document.getElementById("username").value;
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+
+          resultDiv.innerHTML = `
+            👤 Name: ${name}<br>
+            📍 Latitude: ${lat}<br>
+            📍 Longitude: ${lng}<br>
+            <a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank">
+              🔗 Open on Google Maps
+            </a>
+          `;
+        }, (error) => {
+          resultDiv.innerHTML = "⚠️ Error getting location: " + error.message;
+        });
+      } else {
+        resultDiv.innerHTML = "❌ Geolocation not supported by your browser.";
+      }
+    });
+  </script>
+
+</body>
+</html>
